@@ -218,7 +218,6 @@ class _MyHomePageState extends State<MyHomePage> {
         textScanning = true;
         imageFile = pickedImage;
         setState(() {});
-
         detectObject(pickedImage);
       }
     } catch (e) {
@@ -371,8 +370,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (textBlocks.isNotEmpty) {
       TextBlock textBlock = textBlocks[0];
       for (TextLine line in textBlock.lines) {
-        // scannedText = scannedText + line.text.replaceAll(RegExp(r'[^0-9]'), '');
-        scannedText = scannedText + line.text;
+        scannedText = scannedText + line.text.replaceAll(RegExp(r'[^0-9]'), '');
+        // scannedText = scannedText + line.text;
         setState(() {});
       }
     } else {
