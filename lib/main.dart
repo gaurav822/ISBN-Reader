@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               setState(() {});
                               scannedText = "";
                               setState(() {});
-                              detectObject(pickedImage);
+                              detectISBNFromBarcode(pickedImage);
                             }
                           } catch (e) {
                             textScanning = false;
@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
         textScanning = true;
         imageFile = pickedImage;
         setState(() {});
-        detectObject(pickedImage);
+        detectISBNFromBarcode(pickedImage);
       }
     } catch (e) {
       textScanning = false;
@@ -228,45 +228,45 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // void scanFromBarCode(XFile image) async {
-  //   final inputImage = InputImage.fromFilePath(image.path);
-  //   final barcodeScan = GoogleMlKit.vision.barcodeScanner();
-  //   final List<Barcode> barcodes = await barcodeScan.processImage(inputImage);
-  //   scannedText = "";
-  //   for (Barcode barcode in barcodes) {
-  //     final String displayValue = barcode.value.displayValue.toString();
-  //     scannedText = scannedText + displayValue;
-  //   }
+  void detectISBNFromBarcode(XFile image) async {
+    final inputImage = InputImage.fromFilePath(image.path);
+    final barcodeScan = GoogleMlKit.vision.barcodeScanner();
+    final List<Barcode> barcodes = await barcodeScan.processImage(inputImage);
+    scannedText = "";
+    for (Barcode barcode in barcodes) {
+      final String displayValue = barcode.value.displayValue.toString();
+      scannedText = scannedText + displayValue;
+    }
 
-  //   textScanning = false;
-  //   setState(() {});
+    textScanning = false;
+    setState(() {});
 
-  //   if (scannedText.isEmpty) {
-  //     Fluttertoast.showToast(
-  //         msg: "Isbn Number not detected. Retry again",
-  //         backgroundColor: Colors.red,
-  //         fontSize: 16);
-  //   } else {
-  //     Fluttertoast.showToast(
-  //         msg: "ISBN Number Detected",
-  //         backgroundColor: Colors.green,
-  //         fontSize: 18);
+    if (scannedText.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "Isbn Number not detected. Retry again",
+          backgroundColor: Colors.red,
+          fontSize: 16);
+    } else {
+      Fluttertoast.showToast(
+          msg: "ISBN Number Detected",
+          backgroundColor: Colors.green,
+          fontSize: 18);
 
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) => AlertDialog(
-  //               content: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                 children: const [
-  //                   Text("Please wait..."),
-  //                   CircularProgressIndicator()
-  //                 ],
-  //               ),
-  //             ));
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Text("Please wait..."),
+                    CircularProgressIndicator()
+                  ],
+                ),
+              ));
 
-  //     fetchBookDetails(scannedText);
-  //   }
-  // }
+      fetchBookDetails(scannedText);
+    }
+  }
 
   Future<void> fetchBookDetails(String isbnNumber) async {
     BookModel bookModel =
@@ -357,60 +357,5 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ));
-  }
-
-  void detectObject(XFile image) async {
-    final inputImage = InputImage.fromFilePath(image.path);
-    final textDetector = GoogleMlKit.vision.textDetectorV2();
-    RecognisedText recognisedText = await textDetector.processImage(inputImage);
-    await textDetector.close();
-    scannedText = "";
-
-    List<TextBlock> textBlocks = recognisedText.blocks;
-    if (textBlocks.isNotEmpty) {
-      TextBlock textBlock = textBlocks[0];
-      for (TextLine line in textBlock.lines) {
-        scannedText = scannedText + line.text.replaceAll(RegExp(r'[^0-9]'), '');
-        // scannedText = scannedText + line.text;
-        setState(() {});
-      }
-    } else {
-      scannedText = "";
-      setState(() {});
-    }
-
-    textScanning = false;
-    setState(() {});
-
-    if (scannedText.isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Isbn Number not detected. Retry again",
-          backgroundColor: Colors.red,
-          fontSize: 16);
-    } else if (scannedText.length == 10 || scannedText.length == 13) {
-      Fluttertoast.showToast(
-          msg: "ISBN Number Detected",
-          backgroundColor: Colors.green,
-          fontSize: 18);
-
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Text("Please wait..."),
-                    CircularProgressIndicator()
-                  ],
-                ),
-              ));
-
-      fetchBookDetails(scannedText);
-    } else {
-      Fluttertoast.showToast(
-          msg: "Invalid ISBN Number. Length must be 10 or 13",
-          backgroundColor: Colors.red,
-          fontSize: 16);
-    }
   }
 }
