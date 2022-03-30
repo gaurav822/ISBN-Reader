@@ -233,6 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final barcodeScan = GoogleMlKit.vision.barcodeScanner();
     final List<Barcode> barcodes = await barcodeScan.processImage(inputImage);
     scannedText = "";
+    setState(() {});
     for (Barcode barcode in barcodes) {
       final String displayValue = barcode.value.displayValue.toString();
       scannedText = scannedText + displayValue;

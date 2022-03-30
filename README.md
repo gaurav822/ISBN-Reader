@@ -1,16 +1,12 @@
 # book_isbn_scanner
 
-A new Flutter project.
+A flutter project to scan barcode to detect ISBN number
+and find book details using google book API.
+
+API Link -> https://www.googleapis.com/books/v1/volumes?q=isbn:ISBN_NUMBER_HERE
+
+APK(app) Link ->https://drive.google.com/file/d/1UlnHUjrJSLPBcD2q7DFkM_MKzemjkoHz/view?usp=sharing
+
+Screenshots Link ->https://github.com/gaurav822/ISBN-Reader/tree/master/screenshots
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
